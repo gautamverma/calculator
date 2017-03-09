@@ -18,8 +18,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StartActivity extends Activity implements OnClickListener {
-
+// inhearting Activity & using OnClickListener when the program first starts.
+// OnClickListener "listens" for any user interaction with the application. 
+public class StartActivity extends Activity implements OnClickListener {  // 
+ // Intializing variables used in further code.
 	Button btn0, btn1, btn2,
 	       btn3, btn4, btn5,
 	       btn6, btn7, btn8,
@@ -35,6 +37,7 @@ public class StartActivity extends Activity implements OnClickListener {
 	Toast messagebox;
 
 	/* THE App Constants */
+	// Inatilizing Which opperations ( +,-,x,%,^) should happen first when solving a calculation. 
 	static final String EMPTY = "";
 	static final int ADD_PRECEDENCE_VALUE = 1;
 	static final int SUB_PRECEDENCE_VALUE = 1;
@@ -43,6 +46,8 @@ public class StartActivity extends Activity implements OnClickListener {
 	static final int EXPO_PRECEDENCE_VALUE = 3;
 	
 	/** Called when the activity is first created. */
+	//Andriod built in function that allows for the creation of the whole User interface when the activity begins and associates
+	// the screen elements with specific id's to reference in code.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +82,9 @@ public class StartActivity extends Activity implements OnClickListener {
         init();
     }
 
-    /* This method will be called on each click and will be handling all the 
+    /*This method will be called on each click of button ( operators or values) and appends buttons clicked to display,
+	Aftter all buttons are clicked runs the compute method to calculate the answer.
+	If no button pressed or calculations is done init function is run to clear/reset display.
      * calculations here.*/
 	@Override
 	public void onClick(View v) {
@@ -129,19 +136,21 @@ public class StartActivity extends Activity implements OnClickListener {
 			display.append("^");
 			break;
 		case R.id.buttonEq:
-				compute();
+				compute(); // Compute function called and answer returned  
 				break;
 		default:
-			init();
+			init(); // setting the display back to default
 		}
 	}
-	
+	 // function to show message that display has been cleared and setting display to "".
 	public void init() {
 		messagebox = new Toast(this);
 		messagebox.setDuration(Toast.LENGTH_SHORT);
 		display.setText("");
 	}
-	
+	 // this function getPrecendence takes in opperations found in the display and returns the precedence values perviously defined
+	// for every operator.
+	// This is used in the compute function to determine order of opperations.
 	public int getPrecedence(char operator) {
 		
 		switch(operator) {
@@ -157,39 +166,58 @@ public class StartActivity extends Activity implements OnClickListener {
 			return EXPO_PRECEDENCE_VALUE;
 		}
 		
-		// It must not be reached for Version 1.0
+		// this case should never be reached as in this current version there's no way of dealing with it.
 		return 0;
 	}
-	
+	 /* function is used to parse through the display text and pull out the opperators and numbers.
+	    These are then added to seperate stacks for either operator or numbers. These values are then run 
+	    through evaluateexpression function where the values in the stack are computed.
+	    ** Note: only number stack is popped in this function.
+	*/
 	public void compute() {
 		Log.d("Compute Method", "");
 		
+		// setting values in display to charactersequence. There is also 2 stacks for numbers and operators initialized.
 		CharSequence exp = display.getText();
 		Stack<Character> operator = new Stack<Character>();
 		Stack<String> number = new Stack<String>();
 		
+		
 		for( int i = 0; i<exp.length(); i++ ) {
+			
+			// sets the default values for Numbers and Operators
 			String sNumber = "";
 			char sOperator = '$';
 			
+			// checks that the current value in the index i is a number and adds that to sNumber string
 			int j = i;
 			while(j < exp.length() && (exp.charAt(j) >= '0' && exp.charAt(j) <= '9' || exp.charAt(j) == '.')) {
 				sNumber += exp.charAt(j); 
 				j++;
 			}
+			// if value is not a number then it must be a character. Add that to sOperator character
 			if( sNumber.equals("") )
 				sOperator = exp.charAt(i);
 			
+			
 			i = j>i?j-1:j;
+			//checks if sOperator does not have $ and the operator stack is not empty. If any of the following conditions that 
+			//this if statement contains fails, then add sOperator to top of operator stack.
 			if(sOperator != '$') {
 				if(!operator.empty()) {
+					// peeks (like a pop without removing from stack) at the value at the top of the stack and adds that operator to op
 					char op = operator.peek();
+					// checks the precedence of the character is op (top of stack) and the current sOperator.
 					if(getPrecedence(op)>getPrecedence(sOperator)) {
-						while(!operator.empty() && getPrecedence(op)>getPrecedence(sOperator)) {
+						// if the operator stack is still not empty and the precendence of operator value is greater than that of 
+						// sOperator then evaluate the expression,passing it to evaluateExpression function
+						while(!operator.empty() && getPrecedence(op)>getPrecedence(sOperator)) { 
 							evaluateExpression(number,operator);
+							//if operator stack is not empty then set op value to top of current operator stack
 							if(!operator.empty())
 								op = operator.peek();
 						}
+						//add sOperator to top of stack
 						operator.push(sOperator);
 					}
 					else operator.push(sOperator);
@@ -199,21 +227,29 @@ public class StartActivity extends Activity implements OnClickListener {
 			else
 				number.push(sNumber);
 		}
-		
+		// if operator stack is not empty then evaluate the expression by passing the stacks for number and operator to evaluateExpression function
 		if(!operator.empty()) {
 			while(!operator.empty())
 				evaluateExpression(number,operator);
 		}
+		// set the current display value to the value popped off of the top of the number stack. This value at the top is the result 
+		//of the evaluateExpression calculation that occurs
 		display.setText(number.pop());
 	}
 	
+	// Function that takes in the two stacks for numbers and operators, from what was entered originally into display, and evaluates 
+	// according to specific cases and in order of precedence (determined in compute function.
 	public void evaluateExpression( Stack<String> number, Stack<Character> operator) {
+		// taking two numbers from the top of the number stack and setting the numbers to doubles,num1 and num2.
 		double num2 = Double.parseDouble(number.pop());
 		double num1 = Double.parseDouble(number.pop());
 		
 		double res = 0;
 		
+		//popping the top operator in the operator stack to be used with the two numbers, num1 and num2, set above
 		char op = operator.pop();
+		
+		// matches op character with case character and based on the match performs the corresponding calculation.
 		switch( op ) {
 		case '+':
 			res = num1 + num2;
@@ -228,20 +264,25 @@ public class StartActivity extends Activity implements OnClickListener {
 			res = num1 / num2;
 			break;
 		case '^':
-			res = calculatePower( num1, num2 );
+			res = calculatePower( num1, num2 ); // calls on calculatePower function to calculate the power of the two numbers
 		default:
 			Log.d("evaluateExpression", "Wrong Expression");
 		}
 		
+		// pushes the resulting value to the top of the number stack. This will be popped in compute function above to display the 
+		// answer
 		number.push(Double.toString(res));
 	}
 	
+	// sets num1 as number to be exponentiated and num2 as exponent number. Uses a for loop to multiply num1 value by itself num2 times.
+	// Returns resulting power answer
 	public double calculatePower(double num1, double num2) {
 		double pow = num1; 
 		for(int i = 1; i<num2; i++ )
 			num1 *= pow;
 		return num1;
 	}
+	// returns a message showing that an invalid operation has occurred, shows this message, and then reinitializes display back to default
 	public void invalidOperation() {
 		messagebox.setText(R.string.invalidMessage);
 		messagebox.show(); 
