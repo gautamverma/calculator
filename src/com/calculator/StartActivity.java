@@ -1,9 +1,8 @@
 /*
- * This is calculator made for the Android platform 2.2 and beyond. 
- * @Author  Gautam Verma
- * @Since   23 September, 2011
- * 
- * Version 1.0  - Have Addition, Subtraction and Multiplication Facilities
+ * Date: 22 April 2017
+ * Name: Akram Zaky
+ * Student ID : 1072758, Zakya
+ * Descripition: The purpose of this Assignment to comment code for a public repository to make it easier to understand and maintain the code in the future. To help indviduals to easily read it and maintain it and expand on the idea of the project.
  * */
 package com.calculator;
 
@@ -18,23 +17,26 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class StartActivity extends Activity implements OnClickListener {
-
+/*
+this is a single-page android calculator app. All logic is handled in this activity.
+*/
+public class StartActivity extends Activity implements OnClickListener {  // 
+ // buttons corresponding to the 10 digits on a calculator
 	Button btn0, btn1, btn2,
 	       btn3, btn4, btn5,
 	       btn6, btn7, btn8,
 	       btn9;
-	
+// buttons corresponding to the 6 available operations	
 	Button btnAdd, btnSub, 
 	       btnMul, btnDiv,
 	       btnExpo, btnEq;
-	
+// the button responsible for clearing the screen	
 	Button btnClear;
 	
 	TextView display;
 	Toast messagebox;
 
-	/* THE App Constants */
+	/* These constants are responsible for determining the order of operations. */ 
 	static final String EMPTY = "";
 	static final int ADD_PRECEDENCE_VALUE = 1;
 	static final int SUB_PRECEDENCE_VALUE = 1;
@@ -42,9 +44,16 @@ public class StartActivity extends Activity implements OnClickListener {
 	static final int DIV_PRECEDENCE_VALUE = 2;
 	static final int EXPO_PRECEDENCE_VALUE = 3;
 	
-	/** Called when the activity is first created. */
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+	    
+	    /* this method is automatically called when this activity is created. 
+    	    It handles all of the "setup" necessary for the app to run properly.
+    	    In particular, it links the button variables to the button layouts defined in
+    	    res/layout/main.xml. It also sets up the click listeners for the different buttons
+    	*/
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
@@ -77,10 +86,13 @@ public class StartActivity extends Activity implements OnClickListener {
         init();
     }
 
-    /* This method will be called on each click and will be handling all the 
-     * calculations here.*/
 	@Override
 	public void onClick(View v) {
+		
+		/*This method will be called on each click of a button (operators or digits) and appends the buttons clicked to the display.
+		When the equals button is clicked, it calls the compute() function, which will calculate a result.
+		If no button is pressed the init() function is run to clear/reset the display.
+		*/
 		
 		switch( v.getId() ) {
 		case R.id.button0:
@@ -129,20 +141,24 @@ public class StartActivity extends Activity implements OnClickListener {
 			display.append("^");
 			break;
 		case R.id.buttonEq:
-				compute();
+				compute(); // Compute function called and answer returned  
 				break;
 		default:
-			init();
+			init(); // setting the display back to default
 		}
 	}
-	
+
 	public void init() {
+		
+// this function shows a message saying the display has been cleared, and then clears the display.
+		
 		messagebox = new Toast(this);
 		messagebox.setDuration(Toast.LENGTH_SHORT);
 		display.setText("");
 	}
 	
 	public int getPrecedence(char operator) {
+/*this function returns the precedence of an operator, based on the constants defined above */
 		
 		switch(operator) {
 		case '+':
@@ -157,39 +173,61 @@ public class StartActivity extends Activity implements OnClickListener {
 			return EXPO_PRECEDENCE_VALUE;
 		}
 		
-		// It must not be reached for Version 1.0
+// this case should never be reached as in this current version there's no way of dealing with it.
 		return 0;
 	}
-	
+
 	public void compute() {
-		Log.d("Compute Method", "");
 		
-		CharSequence exp = display.getText();
+				/* This function implements the first half of of Dijkstra's two-stack algorithm for evaluating expressions (aka the Shunting-Yard algorithm).
+	    The function parses through the display text and pulls out the operators and numbers.
+	    These are then added to seperate stacks for either operators or numbers. These stacks are then passed to 
+	    evaluateExpression(), where the second half of Dijkstra's two-stack algorithm is implemented, and the result is calculated.
+		*/
+
+		Log.d("Compute Method", "");
+	
+		CharSequence exp = display.getText();// the expression to be parsed
+
+		// the two stacks (operators and numbers) used in Dijkstra's two-stack algorithm
 		Stack<Character> operator = new Stack<Character>();
 		Stack<String> number = new Stack<String>();
 		
+		
 		for( int i = 0; i<exp.length(); i++ ) {
+			
+			// iterate through the characters in the expression
 			String sNumber = "";
 			char sOperator = '$';
 			
+			
 			int j = i;
 			while(j < exp.length() && (exp.charAt(j) >= '0' && exp.charAt(j) <= '9' || exp.charAt(j) == '.')) {
-				sNumber += exp.charAt(j); 
+				// starting from index i,  if the character at index i is part of a number, increment j until you reach the end of the number
+				sNumber += exp.charAt(j); //keep track of the numbers as they are iterated through
 				j++;
 			}
-			if( sNumber.equals("") )
+			
+			if( sNumber.equals("") ) // if no number was found, that means an operator was found
 				sOperator = exp.charAt(i);
 			
+			//Identify Operators and numbers and repeated call Evaluate.
 			i = j>i?j-1:j;
+			
 			if(sOperator != '$') {
 				if(!operator.empty()) {
+					
 					char op = operator.peek();
+					
 					if(getPrecedence(op)>getPrecedence(sOperator)) {
-						while(!operator.empty() && getPrecedence(op)>getPrecedence(sOperator)) {
+						
+						while(!operator.empty() && getPrecedence(op)>getPrecedence(sOperator)) { 
 							evaluateExpression(number,operator);
+							
 							if(!operator.empty())
 								op = operator.peek();
 						}
+						
 						operator.push(sOperator);
 					}
 					else operator.push(sOperator);
@@ -204,16 +242,27 @@ public class StartActivity extends Activity implements OnClickListener {
 			while(!operator.empty())
 				evaluateExpression(number,operator);
 		}
+		
 		display.setText(number.pop());
 	}
 	
 	public void evaluateExpression( Stack<String> number, Stack<Character> operator) {
+		/* This function implements the second half of Dijkstra's two-stack algorithm. It takes a stack of numbers and operations,
+		representing an expression, and pushes the result back to the top of the number stack (where it might be used in future 
+		calls of this function). This process can be repeated (by repeatedly using this function) to calculate long and complex expressions
+		*/
+
+
+		// get two numbers from the numbers stack
 		double num2 = Double.parseDouble(number.pop());
 		double num1 = Double.parseDouble(number.pop());
 		
-		double res = 0;
+		double res = 0;// used to store the result of the operation
 		
+		// get the operator that will be applied to the above 2 numbers
 		char op = operator.pop();
+		
+	        // matches op character with case character and based on the match performs the corresponding calculation.
 		switch( op ) {
 		case '+':
 			res = num1 + num2;
@@ -228,21 +277,27 @@ public class StartActivity extends Activity implements OnClickListener {
 			res = num1 / num2;
 			break;
 		case '^':
-			res = calculatePower( num1, num2 );
+			res = calculatePower( num1, num2 ); // calls on calculatePower function to calculate the power of the two numbers
 		default:
 			Log.d("evaluateExpression", "Wrong Expression");
 		}
 		
+		// pushes the resulting value to the top of the number stack. 
 		number.push(Double.toString(res));
 	}
 	
+	// sets num1 as number to be exponentiated and num2 as exponent number. Uses a for loop to multiply num1 value by itself num2 times.
+	// Returns resulting power answer
 	public double calculatePower(double num1, double num2) {
+		// calculates num1^num2. Unclear why Math.pow(double a, double b) wasn't used. Maybe a requirement for a school project?
 		double pow = num1; 
 		for(int i = 1; i<num2; i++ )
 			num1 *= pow;
 		return num1;
 	}
+	
 	public void invalidOperation() {
+		// shows a message showing that an invalid operation has occurred. shows this message, and then reinitializes display back to default
 		messagebox.setText(R.string.invalidMessage);
 		messagebox.show(); 
 		init(); /* Setting back things to the default */
