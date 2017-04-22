@@ -178,28 +178,37 @@ public class StartActivity extends Activity implements OnClickListener {  //
 	}
 
 	public void compute() {
-		Log.d("Compute Method", "");
 		
-		// setting values in display to charactersequence. There is also 2 stacks for numbers and operators initialized.
-		CharSequence exp = display.getText();
+				/* This function implements the first half of of Dijkstra's two-stack algorithm for evaluating expressions (aka the Shunting-Yard algorithm).
+	    The function parses through the display text and pulls out the operators and numbers.
+	    These are then added to seperate stacks for either operators or numbers. These stacks are then passed to 
+	    evaluateExpression(), where the second half of Dijkstra's two-stack algorithm is implemented, and the result is calculated.
+		*/
+
+		Log.d("Compute Method", "");
+	
+		CharSequence exp = display.getText();// the expression to be parsed
+
+		// the two stacks (operators and numbers) used in Dijkstra's two-stack algorithm
 		Stack<Character> operator = new Stack<Character>();
 		Stack<String> number = new Stack<String>();
 		
 		
 		for( int i = 0; i<exp.length(); i++ ) {
 			
-			// sets the default values for Numbers and Operators
+			// iterate through the characters in the expression
 			String sNumber = "";
 			char sOperator = '$';
 			
-			// checks that the current value in the index i is a number and adds that to sNumber string
+			
 			int j = i;
 			while(j < exp.length() && (exp.charAt(j) >= '0' && exp.charAt(j) <= '9' || exp.charAt(j) == '.')) {
-				sNumber += exp.charAt(j); 
+				// starting from index i,  if the character at index i is part of a number, increment j until you reach the end of the number
+				sNumber += exp.charAt(j); //keep track of the numbers as they are iterated through
 				j++;
 			}
-			// if value is not a number then it must be a character. Add that to sOperator character
-			if( sNumber.equals("") )
+			
+			if( sNumber.equals("") ) // if no number was found, that means an operator was found
 				sOperator = exp.charAt(i);
 			
 			
@@ -240,8 +249,6 @@ public class StartActivity extends Activity implements OnClickListener {  //
 		display.setText(number.pop());
 	}
 	
-	// Function that takes in the two stacks for numbers and operators, from what was entered originally into display, and evaluates 
-	// according to specific cases and in order of precedence (determined in compute function.
 	public void evaluateExpression( Stack<String> number, Stack<Character> operator) {
 		// taking two numbers from the top of the number stack and setting the numbers to doubles,num1 and num2.
 		double num2 = Double.parseDouble(number.pop());
