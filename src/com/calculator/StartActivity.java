@@ -211,25 +211,23 @@ public class StartActivity extends Activity implements OnClickListener {  //
 			if( sNumber.equals("") ) // if no number was found, that means an operator was found
 				sOperator = exp.charAt(i);
 			
-			
+			//Identify Operators and numbers and repeated call Evaluate.
 			i = j>i?j-1:j;
-			//checks if sOperator does not have $ and the operator stack is not empty. If any of the following conditions that 
-			//this if statement contains fails, then add sOperator to top of operator stack.
+			
 			if(sOperator != '$') {
 				if(!operator.empty()) {
-					// peeks (like a pop without removing from stack) at the value at the top of the stack and adds that operator to op
+					
 					char op = operator.peek();
-					// checks the precedence of the character is op (top of stack) and the current sOperator.
+					
 					if(getPrecedence(op)>getPrecedence(sOperator)) {
-						// if the operator stack is still not empty and the precendence of operator value is greater than that of 
-						// sOperator then evaluate the expression,passing it to evaluateExpression function
+						
 						while(!operator.empty() && getPrecedence(op)>getPrecedence(sOperator)) { 
 							evaluateExpression(number,operator);
-							//if operator stack is not empty then set op value to top of current operator stack
+							
 							if(!operator.empty())
 								op = operator.peek();
 						}
-						//add sOperator to top of stack
+						
 						operator.push(sOperator);
 					}
 					else operator.push(sOperator);
@@ -239,13 +237,12 @@ public class StartActivity extends Activity implements OnClickListener {  //
 			else
 				number.push(sNumber);
 		}
-		// if operator stack is not empty then evaluate the expression by passing the stacks for number and operator to evaluateExpression function
+		
 		if(!operator.empty()) {
 			while(!operator.empty())
 				evaluateExpression(number,operator);
 		}
-		// set the current display value to the value popped off of the top of the number stack. This value at the top is the result 
-		//of the evaluateExpression calculation that occurs
+		
 		display.setText(number.pop());
 	}
 	
