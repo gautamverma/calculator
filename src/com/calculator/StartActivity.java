@@ -2,7 +2,7 @@
  * Date: 22 April 2017
  * Name: Akram Zaky
  * Student ID : 1072758, Zakya
- * Descripition: The purpose of this Assignment to comment code for a public repository to make it easier to understand and maintain the code.
+ * Descripition: The purpose of this Assignment to comment code for a public repository to make it easier to understand and maintain the code in the future. To help indviduals to easily read it and maintain it and expand on the idea of the project.
  * */
 package com.calculator;
 
