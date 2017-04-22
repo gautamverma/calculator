@@ -292,6 +292,7 @@ public class StartActivity extends Activity implements OnClickListener {  //
 	// sets num1 as number to be exponentiated and num2 as exponent number. Uses a for loop to multiply num1 value by itself num2 times.
 	// Returns resulting power answer
 	public double calculatePower(double num1, double num2) {
+		// calculates num1^num2. Unclear why Math.pow(double a, double b) wasn't used. Maybe a requirement for a school project?
 		double pow = num1; 
 		for(int i = 1; i<num2; i++ )
 			num1 *= pow;
