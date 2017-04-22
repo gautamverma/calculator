@@ -49,6 +49,13 @@ public class StartActivity extends Activity implements OnClickListener {  //
 	// the screen elements with specific id's to reference in code.
     @Override
     public void onCreate(Bundle savedInstanceState) {
+	    
+	    /* this method is automatically called when this activity is created. 
+    	    It handles all of the "setup" necessary for the app to run properly.
+    	    In particular, it links the button variables to the button layouts defined in
+    	    res/layout/main.xml. It also sets up the click listeners for the different buttons
+    	*/
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
