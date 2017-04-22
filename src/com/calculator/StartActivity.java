@@ -292,8 +292,9 @@ public class StartActivity extends Activity implements OnClickListener {  //
 			num1 *= pow;
 		return num1;
 	}
-	// returns a message showing that an invalid operation has occurred, shows this message, and then reinitializes display back to default
+	
 	public void invalidOperation() {
+		// shows a message showing that an invalid operation has occurred. shows this message, and then reinitializes display back to default
 		messagebox.setText(R.string.invalidMessage);
 		messagebox.show(); 
 		init(); /* Setting back things to the default */
