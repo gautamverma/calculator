@@ -17,26 +17,26 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-// inhearting Activity & using OnClickListener when the program first starts.
-// OnClickListener "listens" for any user interaction with the application. 
+/*
+this is a single-page android calculator app. All logic is handled in this activity.
+*/
 public class StartActivity extends Activity implements OnClickListener {  // 
- // Intializing variables used in further code.
+ // buttons corresponding to the 10 digits on a calculator
 	Button btn0, btn1, btn2,
 	       btn3, btn4, btn5,
 	       btn6, btn7, btn8,
 	       btn9;
-	
+// buttons corresponding to the 6 available operations	
 	Button btnAdd, btnSub, 
 	       btnMul, btnDiv,
 	       btnExpo, btnEq;
-	
+// the button responsible for clearing the screen	
 	Button btnClear;
 	
 	TextView display;
 	Toast messagebox;
 
-	/* THE App Constants */
-	// Inatilizing Which opperations ( +,-,x,%,^) should happen first when solving a calculation. 
+/* These constants are responsible for determining the order of operations. */ 
 	static final String EMPTY = "";
 	static final int ADD_PRECEDENCE_VALUE = 1;
 	static final int SUB_PRECEDENCE_VALUE = 1;
