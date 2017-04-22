@@ -147,16 +147,18 @@ public class StartActivity extends Activity implements OnClickListener {  //
 			init(); // setting the display back to default
 		}
 	}
-	 // function to show message that display has been cleared and setting display to "".
+
 	public void init() {
+		
+// this function shows a message saying the display has been cleared, and then clears the display.
+		
 		messagebox = new Toast(this);
 		messagebox.setDuration(Toast.LENGTH_SHORT);
 		display.setText("");
 	}
-	 // this function getPrecendence takes in opperations found in the display and returns the precedence values perviously defined
-	// for every operator.
-	// This is used in the compute function to determine order of opperations.
+	
 	public int getPrecedence(char operator) {
+/*this function returns the precedence of an operator, based on the constants defined above */
 		
 		switch(operator) {
 		case '+':
@@ -171,14 +173,10 @@ public class StartActivity extends Activity implements OnClickListener {  //
 			return EXPO_PRECEDENCE_VALUE;
 		}
 		
-		// this case should never be reached as in this current version there's no way of dealing with it.
+// this case should never be reached as in this current version there's no way of dealing with it.
 		return 0;
 	}
-	 /* function is used to parse through the display text and pull out the opperators and numbers.
-	    These are then added to seperate stacks for either operator or numbers. These values are then run 
-	    through evaluateexpression function where the values in the stack are computed.
-	    ** Note: only number stack is popped in this function.
-	*/
+
 	public void compute() {
 		Log.d("Compute Method", "");
 		
