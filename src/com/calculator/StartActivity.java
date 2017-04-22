@@ -86,12 +86,13 @@ public class StartActivity extends Activity implements OnClickListener {  //
         init();
     }
 
-    /*This method will be called on each click of button ( operators or values) and appends buttons clicked to display,
-	Aftter all buttons are clicked runs the compute method to calculate the answer.
-	If no button pressed or calculations is done init function is run to clear/reset display.
-     * calculations here.*/
 	@Override
 	public void onClick(View v) {
+		
+		/*This method will be called on each click of a button (operators or digits) and appends the buttons clicked to the display.
+		When the equals button is clicked, it calls the compute() function, which will calculate a result.
+		If no button is pressed the init() function is run to clear/reset the display.
+		*/
 		
 		switch( v.getId() ) {
 		case R.id.button0:
