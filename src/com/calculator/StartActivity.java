@@ -250,16 +250,22 @@ public class StartActivity extends Activity implements OnClickListener {  //
 	}
 	
 	public void evaluateExpression( Stack<String> number, Stack<Character> operator) {
-		// taking two numbers from the top of the number stack and setting the numbers to doubles,num1 and num2.
+		/* This function implements the second half of Dijkstra's two-stack algorithm. It takes a stack of numbers and operations,
+		representing an expression, and pushes the result back to the top of the number stack (where it might be used in future 
+		calls of this function). This process can be repeated (by repeatedly using this function) to calculate long and complex expressions
+		*/
+
+
+		// get two numbers from the numbers stack
 		double num2 = Double.parseDouble(number.pop());
 		double num1 = Double.parseDouble(number.pop());
 		
-		double res = 0;
+		double res = 0;// used to store the result of the operation
 		
-		//popping the top operator in the operator stack to be used with the two numbers, num1 and num2, set above
+		// get the operator that will be applied to the above 2 numbers
 		char op = operator.pop();
 		
-		// matches op character with case character and based on the match performs the corresponding calculation.
+	        // matches op character with case character and based on the match performs the corresponding calculation.
 		switch( op ) {
 		case '+':
 			res = num1 + num2;
@@ -279,8 +285,7 @@ public class StartActivity extends Activity implements OnClickListener {  //
 			Log.d("evaluateExpression", "Wrong Expression");
 		}
 		
-		// pushes the resulting value to the top of the number stack. This will be popped in compute function above to display the 
-		// answer
+		// pushes the resulting value to the top of the number stack. 
 		number.push(Double.toString(res));
 	}
 	
