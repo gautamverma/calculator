@@ -1,9 +1,8 @@
 /*
- * This is calculator made for the Android platform 2.2 and beyond. 
- * @Author  Gautam Verma
- * @Since   23 September, 2011
- * 
- * Version 1.0  - Have Addition, Subtraction and Multiplication Facilities
+ * Date: 22 April 2017
+ * Name: Akram Zaky
+ * Student ID : 1072758, Zakya
+ * Descripition: The purpose of this Assignment to comment code for a public repository to make it easier to understand and maintain the code.
  * */
 package com.calculator;
 
