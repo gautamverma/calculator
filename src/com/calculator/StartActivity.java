@@ -36,7 +36,7 @@ public class StartActivity extends Activity implements OnClickListener {  //
 	TextView display;
 	Toast messagebox;
 
-/* These constants are responsible for determining the order of operations. */ 
+	/* These constants are responsible for determining the order of operations. */ 
 	static final String EMPTY = "";
 	static final int ADD_PRECEDENCE_VALUE = 1;
 	static final int SUB_PRECEDENCE_VALUE = 1;
@@ -44,9 +44,7 @@ public class StartActivity extends Activity implements OnClickListener {  //
 	static final int DIV_PRECEDENCE_VALUE = 2;
 	static final int EXPO_PRECEDENCE_VALUE = 3;
 	
-	/** Called when the activity is first created. */
-	//Andriod built in function that allows for the creation of the whole User interface when the activity begins and associates
-	// the screen elements with specific id's to reference in code.
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 	    
